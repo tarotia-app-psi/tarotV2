@@ -1,1 +1,328 @@
 
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tarot Duplas Místicas — Lectura Inteligente</title>
+    <meta name="description" content="Consulta el Tarot con Duplas Místicas. Lecturas predictivas, estilo mágico y filosófico. Carta del día gratuita.">
+    <meta name="theme-color" content="#1a0f2e">
+    <meta property="og:title" content="Tarot Duplas Místicas">
+    <meta property="og:description" content="Descubre tu destino con el sistema de lectura por duplas más preciso.">
+    <meta property="og:type" content="website">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔮</text></svg>">
+    <link rel="stylesheet" href="./css/estilos.css">
+</head>
+<body>
+
+<div class="container">
+    <h1>Tarot Sagrado</h1>
+    <div class="subtitle">Sistema de Lectura Inteligente</div>
+
+    <!-- PANTALLA 1: PORTADA -->
+    <div id="screen-portada" class="screen">
+        <button class="btn-carta-diaria" onclick="tirarCartaDiaria()" id="btn-carta-diaria">
+            <span class="btn-carta-diaria-icon">✨</span>
+            <span>Mi Carta Consejo del Día Gratis</span>
+            <span class="btn-carta-diaria-icon">✨</span>
+        </button>
+
+        <h3 class="section-title">Selecciona el estilo de lectura:</h3>
+        
+        <div class="menu-portada">
+            <div class="opcion-tarjeta" onclick="irAlEjeConsulta('magico')">
+                <div class="opcion-icono">🔮</div>
+                <div class="opcion-info">
+                    <h3>Estilo Mágico</h3>
+                    <p>Lectura directa, mística y al hueso. Consejos prácticos y predictivos.</p>
+                </div>
+            </div>
+
+            <div class="opcion-tarjeta" onclick="irAlEjeConsulta('filosofico')">
+                <div class="opcion-icono">🧘‍♂️</div>
+                <div class="opcion-info">
+                    <h3>Estilo Filosófico</h3>
+                    <p>Lectura profunda, psicológica y reflexiva para tu evolución.</p>
+                </div>
+            </div>
+
+            <div class="opcion-tarjeta opcion-tarjeta-premium" onclick="abrirModuloProfesional()">
+                <div class="opcion-icono">💼</div>
+                <div class="opcion-info">
+                    <h3>Módulo Profesional <span class="badge-premium-inline">PREMIUM</span></h3>
+                    <p>Trabajá de tarotista o estudiá a fondo: herramientas técnicas, lecturas con mazo físico y guías de negocio.</p>
+                </div>
+            </div>
+        </div>
+
+        <button class="btn-secundario" onclick="abrirHistorial()">
+            📜 Ver Mis Lecturas Anteriores
+        </button>
+        
+        <button type="button" onclick="pedirEmailAlUsuario()" class="btn-email-vinculo">
+            📧 Vincular mi Correo Electrónico
+        </button>
+
+        <!-- BANNER PREMIUM -->
+        <div class="banner-suscripcion">
+            <h4>Pase Místico Premium</h4>
+            <p class="banner-precio">Desbloqueá todo el power por $7.000 ARS al mes</p>
+            
+            <ul class="banner-lista">
+                <li>🚀 <b>TRABAJE DE TAROTISTA:</b> Herramientas e indicaciones para trabajar de forma virtual o presencial.</li>
+                <li>📚 <b>Primeros pasos:</b> Instrucciones guiadas para comenzar tu camino como tarotista profesional.</li>
+                <li>🃏 <b>Mazo Físico y Modo Tarotista:</b> Accesos ilimitados para tus sesiones en vivo.</li>
+                <li>🔍 <b>Modo de definiciones:</b> Acceso a significados clave para que hagas tu propia interpretación.</li>
+                <li>🔮 <b>Consultas Avanzadas:</b> Preguntas específicas a la IA y re-preguntas aclaratorias sin límites.</li>
+                <li>✨ <b>Navegación fluida:</b> Interfaz limpia y 100% libre de banners publicitarios.</li>
+            </ul>
+
+            <button class="btn-suscribirse" onclick="window.open('https://mpago.la/2rDcjLS', '_blank')">
+                Adquirir Pase Premium ✨
+            </button>
+        </div>
+    </div>
+
+    <!-- PANTALLA: MAZO FÍSICO -->
+    <div id="screen-fisico" class="screen hidden">
+        <h2 class="titulo-fisico">🔮 Mazo Físico</h2>
+        <p class="subtitulo-fisico">
+            Mezclá tu mazo de 78 cartas, sacá dos duplas y cargalas a continuación:
+        </p>
+
+        <div class="dupla-container">
+            <h4 class="dupla-titulo">🌓 Dupla 1: Situación Actual y Pasado</h4>
+            <div class="campo-carta">
+                <label>Carta 1 (Presente):</label>
+                <select id="fisico-carta1" class="select-carta-fisica"></select>
+            </div>
+            <div class="campo-carta">
+                <label>Carta 2 (Pasado):</label>
+                <select id="fisico-carta2" class="select-carta-fisica"></select>
+            </div>
+        </div>
+
+        <div class="dupla-container">
+            <h4 class="dupla-titulo">🚀 Dupla 2: Evolución Futura</h4>
+            <div class="campo-carta">
+                <label>Carta 3 (Futuro):</label>
+                <select id="fisico-carta3" class="select-carta-fisica"></select>
+            </div>
+            <div class="campo-carta">
+                <label>Carta 4 (Resultado):</label>
+                <select id="fisico-carta4" class="select-carta-fisica"></select>
+            </div>
+        </div>
+
+        <button class="btn-confirmar-fisico" onclick="irAlEjeFisico()">
+            Confirmar Cartas y Elegir Eje ✨
+        </button>
+        
+        <button class="btn-volver-link" onclick="volverAPortada()">
+            Volver a la portada
+        </button>
+    </div>
+
+    <!-- PANTALLA 2: SELECCIÓN DEL EJE -->
+    <div id="screen-selector" class="screen hidden">
+        <h3 id="titulo-eje-estilo">Selecciona el eje de tu consulta:</h3>
+        <div class="theme-selector">
+            <button onclick="ejecutarLecturaSegunModo('Amor')">❤️ Amor y Relaciones</button>
+            <button onclick="ejecutarLecturaSegunModo('Negocios')">💼 Negocios y Dinero</button>
+            <button onclick="ejecutarLecturaSegunModo('General')">🔮 Vida General</button>
+            <button id="btn-pregunta-especifica" onclick="abrirPantallaPregunta()" class="btn-premium">
+                ✨ Pregunta Específica (Premium)
+            </button>
+        </div>
+        <button class="back-btn" onclick="volverAPortada()">⬅ Volver al Menú</button>
+    </div>
+
+    <!-- PANTALLA: PREGUNTA ESPECÍFICA -->
+    <div id="screen-pregunta" class="screen hidden">
+        <h3 class="titulo-pregunta">🔮 Consulta Específica</h3>
+        <p class="texto-ayuda-pregunta">
+            Escribí tu pregunta con la mayor claridad posible para que la IA adapte la lectura a tu situación real:
+        </p>
+        
+        <textarea id="texto-pregunta-usuario" rows="4" placeholder="Ej: ¿Qué debo tener en cuenta sobre la propuesta laboral que me hicieron ayer?..." maxlength="300"></textarea>
+        <div class="contador-caracteres"><span id="contador-pregunta">0</span>/300</div>
+        
+        <button class="btn-lanzar-tirada" onclick="confirmarPreguntaYEjecutar()">
+            Lanzar Tirada Mística ✨
+        </button>
+        
+        <button class="back-btn" onclick="volverAPortada()">⬅ Volver al Menú Principal</button>
+    </div>
+
+    <!-- PANTALLA 3: RESULTADOS -->
+    <div id="screen-result" class="screen hidden">
+        <h3 id="reading-theme-title"></h3>
+        
+        <div class="tarot-table">
+            <div class="duple-box">
+                <div class="duple-title">Presente y Pasado</div>
+                <div class="card-container">
+                    <div id="img-a" class="card-visual"></div>
+                    <div id="name-a" class="card-name"></div>
+                </div>
+                <div class="card-container">
+                    <div id="img-b" class="card-visual"></div>
+                    <div id="name-b" class="card-name"></div>
+                </div>
+            </div>
+            
+            <div class="duple-box">
+                <div class="duple-title">Futuro Cercano</div>
+                <div class="card-container">
+                    <div id="img-c" class="card-visual"></div>
+                    <div id="name-c" class="card-name"></div>
+                </div>
+                <div class="card-container">
+                    <div id="img-d" class="card-visual"></div>
+                    <div id="name-d" class="card-name"></div>
+                </div>
+            </div>
+        </div>
+
+        <div id="voice-controls" class="voice-panel hidden">
+            <button class="btn-voice" onclick="reproducirVoz('todo')">🔊 Leer Todo</button>
+            <button class="btn-voice" onclick="reproducirVoz('conclusion')">✨ Solo Conclusión</button>
+            <button class="btn-audio-predicciones" onclick="reproducirVoz('predicciones')">🔮 Escuchar Predicciones</button>
+        </div>
+
+        <div class="reading-output" id="interpretation-text"></div>
+
+        <!-- RE-PREGUNTA PREMIUM -->
+        <div id="contenedor-repregunta" class="voice-panel hidden repregunta-box">
+            <h4 class="repregunta-titulo">✨ ¿Te quedó alguna duda? Preguntale a la IA:</h4>
+            <textarea id="texto-repregunta" rows="2" placeholder="Ej: ¿Qué significa esa Muerte en el futuro si sigo con mi plan?..." maxlength="200"></textarea>
+            <div class="contador-caracteres"><span id="contador-repregunta">0</span>/200</div>
+            <button id="btn-enviar-repregunta" onclick="enviarRepreguntaServidor()" class="btn-repregunta">
+                Enviar Re-pregunta Premium 🔮
+            </button>
+        </div>
+
+        <button class="back-btn btn-nueva-consulta" onclick="volverInicio()">Nueva Consulta</button>
+    </div>
+
+    <!-- PANTALLA: MÓDULO PROFESIONAL -->
+    <div id="screen-modulo-profesional" class="screen hidden">
+        <h2 class="titulo-modulo">💼 Módulo Profesional</h2>
+        <p class="subtitulo-modulo">
+            Utilizá el poder de la IA para dar consultas a tus propios clientes, estudiar estructuras o potenciar tu negocio:
+        </p>
+
+        <div class="menu-portada">
+            <div class="opcion-tarjeta opcion-tarjeta-prof" onclick="verificarAccesoTarotista()">
+                <div class="opcion-icono">📖</div>
+                <div class="opcion-info">
+                    <h3>Modo Tarotista (Digital)</h3>
+                    <p>Significados técnicos y objetivos en pantalla para interpretar de forma autónoma.</p>
+                </div>
+            </div>
+
+            <div class="opcion-tarjeta opcion-tarjeta-prof" onclick="verificarAccesoTarotistaFisico()">
+                <div class="opcion-icono">📖🃏</div>
+                <div class="opcion-info">
+                    <h3>Tarotista con Mazo Físico</h3>
+                    <p>Tirá tus cartas reales y obtené el desglose analítico y estructural de las duplas.</p>
+                </div>
+            </div>
+
+            <div class="opcion-tarjeta opcion-tarjeta-oro" onclick="verificarAccesoFisico()">
+                <div class="opcion-icono">🃏</div>
+                <div class="opcion-info">
+                    <h3>Mazo Físico Predictivo <span id="badge-fisico-muestra-prof" class="badge-muestras">5 Muestras</span></h3>
+                    <p>Ingresá las cartas de tus clientes y obtené la traducción fluida de la IA.</p>
+                </div>
+            </div>
+        </div>
+
+        <button onclick="abrirGuiaLectura()" class="btn-guia-mistica">
+            📖 Guía: ¿Cómo se lee el Tarot?
+        </button>
+        
+        <div class="banner-negocio">
+            <h4>💡 ¿Cómo usar este módulo para ganar dinero?</h4>
+            <p>
+                <b>Paso 1:</b> Atendé a tu cliente de forma presencial o virtual. <br>
+                <b>Paso 2:</b> Usá el modo <i>"Mazo Físico Predictivo"</i> para que la IA redacte la lectura por vos en segundos. <br>
+                <b>Paso 3:</b> Si el cliente te hace repreguntas difíciles, usá el botón de la IA para responderle con precisión profesional al instante. ¡Cobrá por tus lecturas y recuperá tu pase premium en el primer día!
+            </p>
+        </div>
+
+        <button class="back-btn back-btn-full" onclick="volverAPortada()">⬅ Volver al Menú Principal</button>
+    </div>
+
+    <!-- PANTALLA: GUÍA DE LECTURA -->
+    <div id="screen-guia-lectura" class="screen hidden">
+        <div class="guia-card">
+            <h2>✨ Guía Fundamental de Lectura de Tarot</h2>
+            
+            <div class="guia-contenido">
+                <p>
+                    Este programa le brinda la posibilidad de tener un inicio en la lectura del tarot, la cual se basa en el principio de la <strong>sincronicidad del universo</strong>; también en que el universo quiere decirnos algo y en mostrar que tu alma está conectada a un todo, pudiendo transmitir o conseguir información para ti o para otra persona.
+                </p>
+
+                <blockquote class="guia-blockquote">
+                    <strong>El Sistema de Lectura por Duplas:</strong><br>
+                    Le da una gran riqueza a los resultados por sobre otros sistemas. Cada dupla puede brindar un significado particular. Por ejemplo: si tuviéramos la dupla del <em>2 de Espadas</em> con <em>El Sol</em>, podemos interpretar simbólicamente que una persona atada o contenida se libera.
+                </blockquote>
+
+                <p>
+                    En esta app, tenemos la <strong>Primer Dupla</strong>, que nos indica la <em>situación actual</em> de la persona, y la <strong>Dupla 2</strong>, que nos muestra <em>cómo desembocará la situación</em>.
+                </p>
+
+                <p>
+                    En caso de que el tarot indique un resultado negativo, nos permite avisar al consultante que debe cambiar de dirección y energía.
+                </p>
+
+                <p class="guia-tip">
+                    💡 <em>Recomendación:</em> Es interesante usar los métodos de la app para tirar una pareja de duplas, y luego, si se quiere, otro par de duplas aclaratorias.
+                </p>
+
+                <hr>
+
+                <p>
+                    🌌 Cada vez que estemos por consultar al tarot, debemos tener el deseo en nuestro interior de que el universo y las cartas nos indiquen la respuesta.
+                </p>
+
+                <p>
+                    🃏 Si se usa un mazo físico, se debe barajar bien confiando en la sincronicidad del universo. Aunque sería más avanzado tocar las cartas y sentir en nuestro interior cuáles serían las correctas.
+                    Además en modo profesional, el usuario debe pensar, la relación entre la dupla 1 y 2, o preguntar esta relación a la IA
+                </p>
+            </div>
+
+            <div class="guia-volver">
+                <button onclick="volverAlModuloProfesional()">⬅ Volver al Módulo Profesional</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- PANTALLA: HISTORIAL -->
+    <div id="screen-historial" class="screen hidden">
+        <h3 class="titulo-historial">📜 Historial de Lecturas</h3>
+        <p class="subtitulo-historial">
+            Aquí se guardan tus últimas consultas del dispositivo.
+        </p>
+        
+        <div id="lista-historial-contenedor" class="lista-historial"></div>
+        
+        <button class="back-btn" onclick="volverAPortada()">⬅ Volver al Menú</button>
+    </div>
+
+</div>
+
+<div class="ad-banner-space">
+    <div class="ad-placeholder-text">[ Espacio reservado para Publicidad Banner ]</div>
+</div>
+
+<script src="js/arcanos.js"></script>
+<script src="js/config.js"></script>
+<script src="js/navigation.js"></script>
+<script src="js/voice.js"></script>
+<script src="js/history.js"></script>
+<script src="js/access.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
