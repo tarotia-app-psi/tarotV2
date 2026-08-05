@@ -15,14 +15,12 @@ const AppState = {
 let ultimasCartasElegidasContexto = null;
 let ultimaLecturaGuardadaContexto = "";
 
-// API: En producción real, esto debería venir de una variable de entorno
-// o de un endpoint de configuración. Por ahora, ofuscación básica.
-const API_BASE = (() => {
-    const partes = ['tarot', '613b', 'onrender', 'com'];
-    return `https://${partes.join('-')}.${partes[2]}.${partes[3]}`;
-})();
-
-const API_URL = API_BASE;
+// ==========================================
+// CONFIGURACIÓN DE API (Servidor Backend)
+// ==========================================
+const API_URL = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+    ? 'http://localhost:3000'
+    : 'https://tarotia-backend.onrender.com';
 
 // Helpers de estado
 function setLoading(valor) {
