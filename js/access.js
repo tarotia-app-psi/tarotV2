@@ -1,4 +1,3 @@
-
 // ==========================================
 // CONTROL DE ACCESOS Y MUESTRAS FÍSICAS (v2.0)
 // ==========================================
@@ -41,6 +40,7 @@ function actualizarBadgeMuestrasFisicas() {
 
 function verificarAccesoTarotista() {
     if (AppState.esUsuarioPremium) {
+        AppState.modoFisicoActivo = false;
         if (typeof irAlEjeConsulta === 'function') irAlEjeConsulta('manual');
     } else {
         const codigo = prompt("✨ El Modo Tarotista es exclusivo de TarotIA Premium.\nIngresá tu código de acceso:");
@@ -52,6 +52,7 @@ function verificarAccesoTarotista() {
 
 function verificarAccesoFisico() {
     if (AppState.esUsuarioPremium) {
+        AppState.modoFisicoActivo = true;
         if (typeof inicializarYMostrarPantallaFisica === 'function') {
             inicializarYMostrarPantallaFisica();
         }
@@ -64,13 +65,26 @@ function verificarAccesoFisico() {
         return;
     }
     
+    AppState.modoFisicoActivo = true;
     if (typeof inicializarYMostrarPantallaFisica === 'function') {
         inicializarYMostrarPantallaFisica();
     }
 }
 
 function verificarAccesoTarotistaFisico() {
-    verificarAccesoFisico();
+    if (!AppState.esUsuarioPremium) {
+        const codigo = prompt("✨ El Modo Tarotista con Mazo Físico es exclusivo de TarotIA Premium.\nIngresá tu código de acceso:");
+        if (codigo && typeof canjearCodigoPremium === 'function') {
+            canjearCodigoPremium(codigo);
+        }
+        return;
+    }
+    
+    AppState.modoFisicoActivo = true;
+    AppState.estiloSeleccionado = 'manual';
+    if (typeof inicializarYMostrarPantallaFisica === 'function') {
+        inicializarYMostrarPantallaFisica();
+    }
 }
 
 // Inicializar badge al cargar
