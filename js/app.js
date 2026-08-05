@@ -168,7 +168,12 @@ async function procesarTiradaCompleta(tema, preguntaEspecifica = null) {
     try {
         const controller = crearAbortController();
         
-        const response = await fetch(`${API_URL}/tirada`, {
+        // ✅ CODIGO CORREGIDO:
+    try {
+        const controller = crearAbortController();
+        
+        // Se cambió '/tirada' por '/api/tarot/tirada-gratis' (o el endpoint de tu backend)
+        const response = await fetch(`${API_URL}/api/tarot/tirada-gratis`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             signal: controller.signal,
