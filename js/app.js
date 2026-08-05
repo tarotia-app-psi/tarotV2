@@ -1,4 +1,3 @@
-
 // ==========================================
 // NÚCLEO DE LA TIRADA (v2.0)
 // ==========================================
@@ -35,7 +34,6 @@ function tirarCartaDiaria() {
         return;
     }
 
-    // Usar la fecha como seed para que sea la misma carta todo el día
     const hoy = new Date();
     const seed = hoy.getFullYear() * 10000 + (hoy.getMonth() + 1) * 100 + hoy.getDate();
     const idx = seed % arcanosCompleto.length;
@@ -66,7 +64,6 @@ function tirarCartaDiaria() {
         "El Mundo": "Culminación y realización. Un ciclo se cierra con éxito."
     };
     
-    // Para cartas menores, mensaje genérico por palo
     let mensaje = significados[carta];
     if (!mensaje) {
         if (carta.includes('Bastos')) mensaje = "Acción y energía creativa. Movete con pasión hoy.";
@@ -87,19 +84,19 @@ function tirarCartaDiaria() {
 // ==========================================
 
 async function procesarTiradaCompleta(tema, preguntaEspecifica = null) {
-    if (AppState.loading) return; // Evitar doble click
+    if (AppState.loading) return;
     
     cancelarRequestActiva();
     setLoading(true);
-    ocultarTodasLasPantallas();
     
+    if (typeof ocultarTodasLasPantallas === 'function') ocultarTodasLasPantallas();
+    if (typeof mostrarPantalla === 'function') mostrarPantalla('screen-result');
+
     const screenResult = document.getElementById('screen-result');
     if (!screenResult) {
         setLoading(false);
         return;
     }
-    
-    mostrarPantalla('screen-result');
 
     const titleEl = document.getElementById('reading-theme-title');
     const textEl = document.getElementById('interpretation-text');
@@ -145,7 +142,7 @@ async function procesarTiradaCompleta(tema, preguntaEspecifica = null) {
         [a, b, c, d] = elegidas;
     }
 
-    // Renderizar cartas con animación
+    // Renderizar cartas
     const nombres = { a, b, c, d };
     const idsNombres = ['name-a', 'name-b', 'name-c', 'name-d'];
     const idsImgs = ['img-a', 'img-b', 'img-c', 'img-d'];
@@ -166,17 +163,15 @@ async function procesarTiradaCompleta(tema, preguntaEspecifica = null) {
     ultimasCartasElegidasContexto = { a, b, c, d };
 
     try {
-        const controller = crearAbortController();
+        AppState.abortController = new AbortController();
         
-        // ✅ CODIGO CORREGIDO:
-    try {
-        const controller = crearAbortController();
+        // Petición al endpoint oficial de tiradas en Render
+        const endpoint = AppState.esUsuarioPremium ? '/api/tarot/tirada-premium' : '/api/tarot/tirada-gratis';
         
-        // Se cambió '/tirada' por '/api/tarot/tirada-gratis' (o el endpoint de tu backend)
-        const response = await fetch(`${API_URL}/api/tarot/tirada-gratis`, {
+        const response = await fetch(`${API_URL}${endpoint}`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            signal: controller.signal,
+            signal: AppState.abortController.signal,
             body: JSON.stringify({
                 tema: tema,
                 pregunta: preguntaEspecifica, 
@@ -207,10 +202,8 @@ async function procesarTiradaCompleta(tema, preguntaEspecifica = null) {
                 if (textRepregunta) textRepregunta.value = "";
             }
             
-            if (AppState.modoFisicoActivo) {
-                if (typeof registrarUsoTiradaFisica === 'function') {
-                    registrarUsoTiradaFisica();
-                }
+            if (AppState.modoFisicoActivo && typeof registrarUsoTiradaFisica === 'function') {
+                registrarUsoTiradaFisica();
             }
             
             if (typeof guardarEnHistorialLocal === 'function') {
@@ -232,10 +225,10 @@ async function procesarTiradaCompleta(tema, preguntaEspecifica = null) {
             mensajeError = "⏳ Demasiadas consultas. Esperá un momento y probá de nuevo.";
             esRetryable = true;
         } else if (err.message === 'SERVER_ERROR') {
-            mensajeError = "🔧 El servidor está descansando. Probá en unos segundos.";
+            mensajeError = "🔧 El servidor está despertando. Aguardá unos segundos y volvé a intentar.";
             esRetryable = true;
         } else if (err.message.includes('Failed to fetch') || err.message.includes('NetworkError')) {
-            mensajeError = "📡 Sin conexión a internet. Verificá tu red.";
+            mensajeError = "📡 Sin conexión con el servidor. Verificá tu red.";
             esRetryable = true;
         }
         
@@ -273,12 +266,12 @@ async function enviarRepreguntaServidor() {
     const contenedorTexto = document.getElementById('interpretation-text');
 
     try {
-        const controller = crearAbortController();
+        AppState.abortController = new AbortController();
         
-        const response = await fetch(`${API_URL}/repregunta`, {
+        const response = await fetch(`${API_URL}/api/tarot/repregunta`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            signal: controller.signal,
+            signal: AppState.abortController.signal,
             body: JSON.stringify({
                 cartas: ultimasCartasElegidasContexto,
                 lecturaAnterior: ultimaLecturaGuardadaContexto,
@@ -296,7 +289,7 @@ async function enviarRepreguntaServidor() {
             nuevaSeccion.className = 'reading-section';
             
             nuevaSeccion.innerHTML = `
-                <h3>🔮 Respuesta de Tara a tu Duda:</h3>
+                <h3>🔮 Respuesta a tu Duda:</h3>
                 <p>${datos.respuesta}</p>
             `;
             
@@ -355,5 +348,7 @@ function inicializarYMostrarPantallaFisica() {
         });
     });
     
-    mostrarPantalla('screen-fisico');
+    if (typeof mostrarPantalla === 'function') {
+        mostrarPantalla('screen-fisico');
+    }
 }
