@@ -7,6 +7,9 @@ const EMOJI_REGEX = /[\u{1F300}-\u{1F9FF}]|[\u{2600}-\u{26FF}]|[\u{2700}-\u{27BF
 function limpiarTextoParaVoz(texto) {
     return texto
         .replace(EMOJI_REGEX, '')
+        .replace(/\*{1,3}/g, '') // Elimina asteriscos de negrita/cursiva
+        .replace(/`{1,3}/g, '')  // Elimina acentos graves/bloques de código
+        .replace(/#{1,6}\s?/g, '') // Elimina títulos markdown (#)
         .replace(/\s+/g, ' ')
         .trim();
 }
@@ -36,13 +39,20 @@ function extraerSeccion(contenedor, inicioKeywords, finKeywords) {
     return texto.trim();
 }
 
+function detenerVoz() {
+    if (window.speechSynthesis) {
+        window.speechSynthesis.cancel();
+    }
+}
+
 function reproducirVoz(tipo) {
     if (!window.speechSynthesis) {
         alert("Tu navegador no soporta síntesis de voz.");
         return;
     }
     
-    window.speechSynthesis.cancel();
+    // Detener cualquier lectura previa
+    detenerVoz();
     
     const contenedor = document.getElementById('interpretation-text');
     if (!contenedor) return;
@@ -80,8 +90,15 @@ function reproducirVoz(tipo) {
 
     const utterance = new SpeechSynthesisUtterance(textoA_Leer);
     utterance.lang = 'es-AR';
-    utterance.rate = 1.05;
-    utterance.pitch = 1.05;
+    utterance.rate = 1.0;
+    utterance.pitch = 1.0;
+
+    // Asignar voz nativa en español si existe
+    const voces = window.speechSynthesis.getVoices();
+    const vozEspaniol = voces.find(v => v.lang.startsWith('es-AR') || v.lang.startsWith('es'));
+    if (vozEspaniol) {
+        utterance.voice = vozEspaniol;
+    }
 
     window.speechSynthesis.speak(utterance);
 }
